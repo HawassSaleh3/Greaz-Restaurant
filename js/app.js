@@ -121,17 +121,13 @@
   /* ============================================================
      Item modal — معاينة العنصر وتخصيصه
      ============================================================ */
-  function resetModalState(item) {
+  function openModal(item) {
+    modalItem = item;
     mState.qty = 1;
     mState.removed = new Set();
     mState.extras = new Set();
     mState.choices = {};
     (item.choices || []).forEach((g) => { mState.choices[g.id] = g.options[0].id; });
-  }
-
-  function openModal(item) {
-    modalItem = item;
-    resetModalState(item);
     $('mNotes').value = '';
     renderModal(item);
     $('itemModal').classList.add('open');
@@ -255,29 +251,8 @@
 
     save();
     renderCart();
-
-    /* Stay open: reset selections so the visitor can customize
-       a different variation and order again without leaving the item */
-    resetModalState(modalItem);
-    $('mNotes').value = '';
-    renderModal(modalItem);
+    closeModal();
     showToast(t('modal.addedToast'));
-  }
-
-  /* Mini strip inside the modal: cart count + jump to cart */
-  function updateCartStrip() {
-    const strip = $('mCartStrip');
-    if (!strip) return;
-    if (cart.length) {
-      const { count, total } = cartTotals();
-      strip.hidden = false;
-      strip.innerHTML = `
-        <span class="mcs-info">🛒 <b>${count}</b> ${t('modal.inCart')} · <b>${fmt(total)}</b></span>
-        <button class="mcs-btn" id="mViewCart">${t('modal.viewCart')}</button>`;
-      $('mViewCart').addEventListener('click', () => { closeModal(); openCart(); });
-    } else {
-      strip.hidden = true;
-    }
   }
 
   /* ============================================================
@@ -362,7 +337,6 @@
 
     $('cartTotal').textContent = fmt(total);
     $('checkoutBtn').disabled = !cart.length;
-    updateCartStrip();
 
     /* Mobile cart bar */
     const bar = $('cartBar');

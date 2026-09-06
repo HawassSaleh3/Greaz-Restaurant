@@ -57,8 +57,6 @@ const I18N = {
     'modal.included': 'مشمول ✓',
     'modal.removed': 'تمت الإزالة ✕',
     'modal.addedToast': 'تمت الإضافة إلى السلة ✓',
-    'modal.inCart': 'في السلة',
-    'modal.viewCart': 'عرض السلة',
 
     'cart.title': 'سلة الطلبات',
     'cart.clear': 'تفريغ',
@@ -136,8 +134,6 @@ const I18N = {
     'modal.included': 'Included ✓',
     'modal.removed': 'Removed ✕',
     'modal.addedToast': 'Added to cart ✓',
-    'modal.inCart': 'in cart',
-    'modal.viewCart': 'View Cart',
 
     'cart.title': 'Your Cart',
     'cart.clear': 'Clear',
