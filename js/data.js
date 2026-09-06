@@ -24,6 +24,7 @@ const I18N = {
     'nav.menu': 'القائمة',
     'nav.about': 'من نحن',
     'nav.contact': 'تواصل معنا',
+    'nav.close': 'إغلاق',
 
     'hero.eyebrow': '★ بيت السماش برجر — بيروت ★',
     'hero.title': 'مش برجرك <em>المعتاد</em>',
@@ -101,6 +102,7 @@ const I18N = {
     'nav.menu': 'Menu',
     'nav.about': 'About',
     'nav.contact': 'Contact',
+    'nav.close': 'Close',
 
     'hero.eyebrow': '★ SMASH BURGER HOUSE — BEIRUT ★',
     'hero.title': 'NOT YOUR <em>USUAL</em> BURGER',

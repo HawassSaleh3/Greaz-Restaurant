@@ -8,7 +8,7 @@
 
   /* ---------- State ---------- */
   let lang = localStorage.getItem('greaz_lang') || 'ar';
-  let cart = JSON.parse(localStorage.getItem('greaz_cart') || '[]');
+  let cart = loadCart();
   let currentCat = 'all';
   let modalItem = null;
   const mState = { qty: 1, removed: new Set(), extras: new Set(), choices: {} };
@@ -18,7 +18,14 @@
   const t = (key) => (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
   const L = (obj) => (obj && (obj[lang] || obj.en)) || '';
   const fmt = (n) => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
-  const save = () => localStorage.setItem('greaz_cart', JSON.stringify(cart));
+  const save = () => { try { localStorage.setItem('greaz_cart', JSON.stringify(cart)); } catch (e) { /* storage unavailable (private mode) */ } };
+
+  function loadCart() {
+    try {
+      const c = JSON.parse(localStorage.getItem('greaz_cart') || '[]');
+      return Array.isArray(c) ? c : [];
+    } catch (e) { return []; } // corrupted storage must never break the page
+  }
 
   function itemById(id) { return MENU.find((i) => i.id === id); }
 
@@ -130,12 +137,15 @@
     (item.choices || []).forEach((g) => { mState.choices[g.id] = g.options[0].id; });
     $('mNotes').value = '';
     renderModal(item);
+    setNavOpen(false);
     $('itemModal').classList.add('open');
+    $('itemModal').setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
 
   function closeModal() {
     $('itemModal').classList.remove('open');
+    $('itemModal').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     modalItem = null;
   }
@@ -310,22 +320,23 @@
           const item = itemById(l.id);
           if (!item) return '';
           const unit = unitPrice(item, l.extras);
+          const safeKey = escapeHtml(l.key);
           return `
           <div class="cart-line">
             <div class="ci-media">${mediaHtml(item, 'img-fallback sm')}</div>
             <div class="ci-info">
               <div class="ci-top">
                 <b>${L(item.name)}</b>
-                <button class="icon-btn ci-remove" data-key="${l.key}" aria-label="Remove">
+                <button class="icon-btn ci-remove" data-key="${safeKey}" aria-label="Remove">
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
                 </button>
               </div>
               <div class="ci-mods">${lineModsHtml(l, item)}</div>
               <div class="ci-bottom">
                 <div class="qty-stepper sm">
-                  <button data-act="dec" data-key="${l.key}" aria-label="-">−</button>
+                  <button data-act="dec" data-key="${safeKey}" aria-label="-">−</button>
                   <span>${l.qty}</span>
-                  <button data-act="inc" data-key="${l.key}" aria-label="+">+</button>
+                  <button data-act="inc" data-key="${safeKey}" aria-label="+">+</button>
                 </div>
                 <span class="ci-price">${fmt(unit * l.qty)}</span>
               </div>
@@ -348,6 +359,8 @@
     } else {
       bar.hidden = true;
     }
+    /* Reserve space above the fixed mobile bar so the footer stays reachable */
+    document.body.classList.toggle('cart-active', cart.length > 0);
 
     bindCartEvents();
   }
@@ -371,12 +384,15 @@
   }
 
   function openCart() {
+    setNavOpen(false);
     $('cartDrawer').classList.add('open');
+    $('cartDrawer').setAttribute('aria-hidden', 'false');
     $('cartBackdrop').classList.add('show');
     document.body.style.overflow = 'hidden';
   }
   function closeCart() {
     $('cartDrawer').classList.remove('open');
+    $('cartDrawer').setAttribute('aria-hidden', 'true');
     $('cartBackdrop').classList.remove('show');
     document.body.style.overflow = '';
   }
@@ -419,7 +435,7 @@
     lines.push(t('wa.thanks'));
 
     const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener');
   }
 
   /* ============================================================
@@ -438,6 +454,10 @@
      Reveal on scroll
      ============================================================ */
   function initReveal() {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+      return;
+    }
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
       { threshold: 0.12 }
@@ -455,6 +475,18 @@
   }
 
   /* ============================================================
+     Mobile nav
+     ============================================================ */
+  function setNavOpen(open) {
+    const nav = $('mobileNav');
+    const toggle = $('navToggle');
+    nav.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? t('nav.close') : t('nav.menu'));
+  }
+
+  /* ============================================================
      Events & init
      ============================================================ */
   function init() {
@@ -465,11 +497,22 @@
       applyI18n();
     });
 
-    /* Nav */
-    $('navToggle').addEventListener('click', () => $('mobileNav').classList.toggle('open'));
+    /* Nav toggle (mobile) */
+    $('navToggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      setNavOpen(!$('mobileNav').classList.contains('open'));
+    });
     document.querySelectorAll('#mobileNav a').forEach((a) =>
-      a.addEventListener('click', () => $('mobileNav').classList.remove('open'))
+      a.addEventListener('click', () => setNavOpen(false))
     );
+    /* Close the mobile nav when tapping anywhere outside the header */
+    document.addEventListener('click', (e) => {
+      if ($('mobileNav').classList.contains('open') && !e.target.closest('#header')) setNavOpen(false);
+    });
+    /* And when growing back to desktop size */
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 760) setNavOpen(false);
+    });
 
     /* Cart */
     $('cartBtn').addEventListener('click', openCart);
@@ -488,7 +531,7 @@
 
     /* ESC closes overlays */
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { closeModal(); closeCart(); $('mobileNav').classList.remove('open'); }
+      if (e.key === 'Escape') { closeModal(); closeCart(); setNavOpen(false); }
     });
 
     applyI18n();
