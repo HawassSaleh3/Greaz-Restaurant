@@ -490,10 +490,28 @@ html[lang="ar"] .mq-item { font-family: 'Cairo'; font-weight: 800; font-size: 16
 
 .modal-footer {
   position: sticky; bottom: 0;
-  display: flex; gap: 12px; align-items: center;
+  display: flex; flex-direction: column; gap: 12px;
   background: linear-gradient(transparent, #fff 32%);
   padding: 16px 24px 20px;
 }
+.modal-footer-row { display: flex; gap: 12px; align-items: center; }
+
+/* Mini cart strip inside modal */
+.m-cart-strip {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 10px 9px 15px; border-radius: 14px;
+  background: var(--red-tint); border: 1.5px dashed #F0B9AF;
+  font-size: 13.5px; font-weight: 700; color: var(--red-deep);
+}
+html[dir="rtl"] .m-cart-strip { padding: 9px 15px 9px 10px; }
+.mcs-info b { font-weight: 800; }
+.mcs-btn {
+  flex: none; font-weight: 800; font-size: 12.5px;
+  color: #fff; background: var(--red);
+  border-radius: 99px; padding: 7px 16px;
+  transition: background 0.2s, transform 0.15s;
+}
+.mcs-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
 .qty-stepper {
   flex: none; display: flex; align-items: center; gap: 4px;
   border: 2px solid #EBDDD1; border-radius: 99px; padding: 4px;
@@ -680,7 +698,7 @@ html[dir="rtl"] .cart-drawer { transform: translateX(-110%); box-shadow: 18px 0 
   }
   .modal-media { height: 200px; }
   .modal-body { padding: 18px 18px 6px; }
-  .modal-footer { padding: 13px 18px calc(16px + env(safe-area-inset-bottom)); }
+  .modal-footer { padding: 13px 18px calc(16px + env(safe-area-inset-bottom)); gap: 10px; }
 
   .cart-drawer { width: 100%; }
   .cart-bar { display: flex; }
