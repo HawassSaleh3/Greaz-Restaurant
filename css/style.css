@@ -83,9 +83,8 @@ html[lang="ar"] .display { font-family: 'Cairo', sans-serif; font-weight: 900; l
 
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand-logo-img {
-  width: 46px; height: 46px; border-radius: 12px;
-  object-fit: cover; display: block;
-  box-shadow: var(--shadow-sm);
+  height: 46px; width: auto; display: block;
+  object-fit: contain;
 }
 .brand-logo {
   width: 40px; height: 40px; border-radius: 50%;
@@ -391,8 +390,9 @@ html[lang="ar"] .mq-item { font-family: 'Cairo'; font-weight: 800; font-size: 16
   padding: 54px 0 34px; text-align: center;
 }
 .footer-logo-img {
-  width: 150px; height: 150px; border-radius: 18px;
-  object-fit: cover; display: block; margin: 0 auto;
+  height: 100px; width: auto; display: block; margin: 0 auto;
+  object-fit: contain;
+  filter: invert(1) brightness(1.6);
 }
 .footer-brand { font-size: 64px; color: #fff; }
 .footer-brand em { color: var(--red); font-style: normal; }
@@ -699,7 +699,8 @@ html[dir="rtl"] .cart-drawer { transform: translateX(-110%); box-shadow: 18px 0 
   .toast { bottom: 86px; }
 
   .footer-brand { font-size: 48px; }
-  .footer-logo-img { width: 110px; height: 110px; }
+  .footer-logo-img { height: 68px; }
+  .brand-logo-img { height: 38px; }
   .brand-text { font-size: 25px; }
 }
 
