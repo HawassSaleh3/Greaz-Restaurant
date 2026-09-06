@@ -377,7 +377,7 @@ const MENU = [
   {
     id: 'wings',
     cat: 'appetizers',
-    img: null, /* TODO: image coming next update */
+    img: 'assets/img/wings.jpg',
     emoji: '🍖',
     name: { en: 'WINGS 7PCS', ar: 'أجنحة 7 قطع' },
     desc: { en: '7 chicken wings dipped in BBQ or buffalo.', ar: '7 أجنحة دجاج مغمسة بالباربكيو أو البافلو.' },
@@ -399,7 +399,7 @@ const MENU = [
   {
     id: 'boneless',
     cat: 'appetizers',
-    img: null, /* TODO: image coming next update */
+    img: 'assets/img/boneless.jpg',
     emoji: '🐔',
     name: { en: 'BONELESS 7PCS', ar: 'بونلس 7 قطع' },
     desc: { en: '7 boneless chicken bites dipped in BBQ or buffalo.', ar: '7 قطع بونلس دجاج مغمسة بالباربكيو أو البافلو.' },
@@ -423,7 +423,7 @@ const MENU = [
   {
     id: 'softDrink',
     cat: 'drinks',
-    img: null, /* TODO: image coming next update */
+    img: 'assets/img/soft-drink.jpg',
     emoji: '🥤',
     name: { en: 'SOFT DRINK', ar: 'مشروب غازي' },
     desc: { en: 'Chilled soft drink — cola, sprite or fanta.', ar: 'مشروب غازي مثلج — كولا، سبرايت أو فانتا.' },
@@ -442,7 +442,7 @@ const MENU = [
   {
     id: 'water',
     cat: 'drinks',
-    img: null, /* TODO: image coming next update */
+    img: 'assets/img/water.jpg',
     emoji: '💧',
     name: { en: 'WATER', ar: 'مياه' },
     desc: { en: 'Chilled bottled water.', ar: 'قارورة مياه باردة.' },

@@ -210,7 +210,6 @@
           <button class="extra-row ${on ? 'on' : ''}" data-ex="${exId}">
             <span class="ex-check">${on ? '✓' : '+'}</span>
             <span class="ex-name">${L(ex.name)}</span>
-            <span class="ex-price">${on ? '+' : ''}${fmt(ex.price)}</span>
           </button>`;
         })
         .join('');
@@ -273,7 +272,7 @@
   function lineModsHtml(l, item) {
     const bits = [];
     l.extras.forEach((exId) => {
-      if (EXTRAS[exId]) bits.push(`<i class="mod extra">+ ${L(EXTRAS[exId].name)} (${fmt(EXTRAS[exId].price)})</i>`);
+      if (EXTRAS[exId]) bits.push(`<i class="mod extra">+ ${L(EXTRAS[exId].name)}</i>`);
     });
     if (l.removed.length) {
       const names = l.removed
